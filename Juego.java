@@ -7,7 +7,7 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
+import tablero.Partida;
 import javax.swing.*;
 
 public class Juego {
@@ -217,6 +217,42 @@ public class Juego {
 		 */
 		public void pintaBarcoHundido(String cadenaBarco) {
             // POR IMPLEMENTAR
+			String[] partes = cadenaBarco.split("#");
+			int fila = Integer.parseInt(partes[0]);
+			int col = Integer.parseInt(partes[1]);
+			char ori = partes[2].charAt(0);
+			System.out.println("ori"+ori);
+			int tam = Integer.parseInt(partes[3]);
+			
+			switch (ori){
+				case 'H':
+					for (int i = col; i < col+tam; i++) {
+						JButton btn =  buttons[fila][i];
+						pintaBoton(btn, Color.red);
+						
+					}
+					break;
+				case 'V':
+					for (int i = fila; i < fila+tam; i++) {
+						JButton btn =  buttons[i][col];
+						pintaBoton(btn, Color.red);
+						
+					}
+					break;
+			}
+			JButton btn = null;
+			for (int i = 0; i < tam; i++) {
+				if (ori=='H') {
+					btn = buttons[fila][col+i];
+				}else{
+					btn = buttons[fila+i][col];
+
+				}
+				pintaBoton(btn, Color.red);
+			}	 
+		quedan--;
+			
+			
 		} // end pintaBarcoHundido
 
 		/**
@@ -267,9 +303,21 @@ public class Juego {
 		@Override
 		public void actionPerformed(ActionEvent e) {
             // POR IMPLEMENTAR
-			if (e.getActionCommand()=="Salir") {
-				//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			switch (e.getActionCommand()) {
+			case "Salir":
+				guiTablero.liberaRecursos();
+				break;
+			case "Nueva Partida":
+				guiTablero.limpiaTablero();
+				partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+				break;
+			case "Mostrar Solucion":
+				guiTablero.muestraSolucion();
+				break;	
+			default:
+				break;
 			}
+			 
 			
 			
 		} // end actionPerformed
@@ -291,8 +339,39 @@ public class Juego {
 		@Override
 		public void actionPerformed(ActionEvent e) {
             // POR IMPLEMENTAR
+			 
 			JButton btn = (JButton) e.getSource();//boton pulsado
 			System.out.println("Fila "+btn.getClientProperty("fila")+ " Columna "+btn.getClientProperty("columna"));
+			System.out.println();
+			
+			int fila =(int) btn.getClientProperty("fila");
+			int col =(int) btn.getClientProperty("columna");
+			int color = partida.pruebaCasilla(fila, col);//devuelve color casilla
+			System.out.println(color);
+			disparos++;
+			
+			//int barco = mar[f][c];
+			switch (color) {
+			case -1:
+				guiTablero.pintaBoton(btn, Color.cyan);
+				break;
+			case -2:
+				 
+				guiTablero.pintaBoton(btn, Color.ORANGE);
+
+				break;
+			case -3:
+				//guiTablero.pintaBoton(btn, Color.red);
+				break;				
+			default://si devuelve la id del barco esta hundido
+				//if(color>=0)
+					//guiTablero.pintaBarcoHundido(partida.getBarco(color));
+				break;
+			}
+			btn.removeActionListener(this);
+			guiTablero.cambiaEstado("Intentos: "+ disparos + " Barcos restantes: "+ quedan);
+			
+			
         } // end actionPerformed
 
 	} // end class ButtonListener
