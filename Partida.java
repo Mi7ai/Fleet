@@ -1,9 +1,7 @@
 package tablero;
 
-import java.awt.image.PixelInterleavedSampleModel;
 import java.util.Random;
 import java.util.Vector;
-import tablero.Juego;
 public class Partida {
 	
 	public static final int AGUA = -1, TOCADO = -2, HUNDIDO = -3;
@@ -52,29 +50,7 @@ public class Partida {
 	 */	
     public int pruebaCasilla(int f, int c) {
         // POR IMPLEMENTAR
-//    	if (mar[f][c] != -1 && mar[f][c] != -2 && mar[f][c] != -3) { //Si NO es AGUA, TOCADO O HUNDIDO, serÃ¡ un barco 
-//    		int indice =mar[f][c];//id barco
-//    		if (barcos.get(indice).getTocadas()+1 != barcos.get(indice).getTamanyo()) { //Si al tocar, no hundimos
-//    			mar[f][c]=-2; //Indicamos que estÃ¡ tocado
-//
-//    		}else{ //Si al tocar, hundimos el barco
-//    			int fila =barcos.get(indice).getFilaInicial(); 
-//    			int colum = barcos.get(indice).getColumnaInicial();
-//    			String Ori = Character.toString(barcos.get(indice).getOrientacion()); //OrientaciÃ³n
-//
-//    			for(int i=0; i<barcos.get(indice).getTamanyo(); i++){ //Recorremos el barco, indicando que hemos hundido
-//    				mar[fila][colum]=-3; //indicamos que esta hundido
-//
-//    				if((Ori.equals('H'))){//si la orientacion es horizontal
-//    					colum++; //Se cambia de fila
-//
-//    				}else{ //Se cambia de columna
-//    					fila++;
-//    				}
-//    			}	
-//    		}
-//    	}
-//    	return mar[f][c];
+
     	int idBarco =mar[f][c];
     	switch (idBarco) {
     	
@@ -124,8 +100,7 @@ public class Partida {
 	 * @return	        cadena con los datos del barco
 	 */	
 	public String getBarco(int idBarco) {
-        String TicketBarco = String.valueOf((barcos.get(idBarco).getFilaInicial()) + '#' + String.valueOf(barcos.get(idBarco).getColumnaInicial()) + '#' + String.valueOf(barcos.get(idBarco).getOrientacion()) + '#' + String.valueOf(barcos.get(idBarco).getTamanyo()));
-		return TicketBarco;
+		return barcos.get(idBarco).toString();
         
 	}
 	
@@ -135,9 +110,8 @@ public class Partida {
 	 */	
 	public String[] getSolucion() {
         String[] listadoBarcos = new String[5];
-        int i = 0;		
-        for(Barco barquito : barcos) {
-        			
+        for(int i = 0; i<barcos.size(); i++) {
+        			listadoBarcos[i]=getBarco(i);
         		}
 		return listadoBarcos;
 	}

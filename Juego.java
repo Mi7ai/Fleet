@@ -161,15 +161,15 @@ public class Juego {
 					
 					buttons[i][j].putClientProperty("fila",i);
 					buttons[i][j].putClientProperty("columna",j);
-					String f = buttons[i][j].getText();
+					//String f = buttons[i][j].getText();
 					 
 				}
 			} 
 			//add buttons to table 
 			for (int i = 0; i < buttons.length; i++) {
 				for (int j = 0; j < buttons.length; j++) {
-					buttons[i][j].addActionListener(tableButtonListener);//añadir evento a cada boton
-					tablero.add(buttons[i][j]);//añadir boton al tablero
+					buttons[i][j].addActionListener(tableButtonListener);//aï¿½adir evento a cada boton
+					tablero.add(buttons[i][j]);//aï¿½adir boton al tablero
 				}
 			}
 
@@ -206,7 +206,31 @@ public class Juego {
 		 * Muestra la solucion de la partida y marca la partida como finalizada
 		 */
 		public void muestraSolucion() {
-            // POR IMPLEMENTAR
+            for(int i = 0;i<NUMFILAS ; i++) {
+            	for(int j=0; j<NUMCOLUMNAS ;j++) {
+            		int color = partida.pruebaCasilla(i, j);//devuelve color casilla        			
+        			
+        				if(color==-1){
+        					
+        						guiTablero.pintaBoton(buttons[i][j], Color.cyan);
+
+        				}else {	
+        					 
+        						
+        					 
+    						guiTablero.pintaBoton(buttons[i][j], Color.red);
+
+        				}
+            		
+
+            
+			
+            	}
+            }
+
+           
+			guiTablero.cambiaEstado("LA SOLUCIÃ“N ES : ");
+			
 		} // end muestraSolucion
 
 
@@ -217,12 +241,14 @@ public class Juego {
 		 */
 		public void pintaBarcoHundido(String cadenaBarco) {
             // POR IMPLEMENTAR
+		
+			//System.out.println(cadenaBarco + "cadena Barco");
 			String[] partes = cadenaBarco.split("#");
 			int fila = Integer.parseInt(partes[0]);
-			int col = Integer.parseInt(partes[1]);
-			char ori = partes[2].charAt(0);
-			System.out.println("ori"+ori);
-			int tam = Integer.parseInt(partes[3]);
+ 			int col = Integer.parseInt(partes[1]);
+ 			char ori = partes[2].charAt(0);
+			
+ 			int tam = Integer.parseInt(partes[3]);
 			
 			switch (ori){
 				case 'H':
@@ -251,7 +277,9 @@ public class Juego {
 				pintaBoton(btn, Color.red);
 			}	 
 		quedan--;
-			
+		
+		
+		
 			
 		} // end pintaBarcoHundido
 
@@ -309,7 +337,18 @@ public class Juego {
 				break;
 			case "Nueva Partida":
 				guiTablero.limpiaTablero();
-				partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+				partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);				 
+				disparos=0;
+				quedan = NUMBARCOS;
+				String est= "Intentos: "+ disparos + " Barcos restantes: "+ quedan;
+				guiTablero.cambiaEstado(est);
+				for (int i = 0; i < NUMFILAS; i++) {
+					for (int j = 0; j < NUMCOLUMNAS; j++) {
+						if (!guiTablero.buttons[i][j].isSelected()) {
+							guiTablero.buttons[i][j].addActionListener(new ButtonListener());;
+						}						
+					}
+				}
 				break;
 			case "Mostrar Solucion":
 				guiTablero.muestraSolucion();
@@ -341,6 +380,7 @@ public class Juego {
             // POR IMPLEMENTAR
 			 
 			JButton btn = (JButton) e.getSource();//boton pulsado
+			
 			System.out.println("Fila "+btn.getClientProperty("fila")+ " Columna "+btn.getClientProperty("columna"));
 			System.out.println();
 			
@@ -351,29 +391,52 @@ public class Juego {
 			disparos++;
 			
 			//int barco = mar[f][c];
-			switch (color) {
-			case -1:
-				guiTablero.pintaBoton(btn, Color.cyan);
-				break;
-			case -2:
+			//while(quedan != 0 ) {
+			if (quedan == 0) {
+				
+			} 
+			if(quedan!=0){
+			
+				switch (color) {
+					case -1:
+						
+						guiTablero.pintaBoton(btn, Color.cyan);
+						break;
+						 
+					case -2:
+						 
+						guiTablero.pintaBoton(btn, Color.ORANGE);
+						break;
+						 
+								
+					default://si devuelve la id del barco esta hundido
+						if(color>=0) {
+							guiTablero.pintaBarcoHundido(partida.getBarco(color));
+							
+						}
+							
+						break;
+					
+				}//end switch
+			
+				guiTablero.cambiaEstado("Intentos: "+ disparos + " Barcos restantes: "+ quedan);
+				btn.removeActionListener(this);
 				 
-				guiTablero.pintaBoton(btn, Color.ORANGE);
-
-				break;
-			case -3:
-				//guiTablero.pintaBoton(btn, Color.red);
-				break;				
-			default://si devuelve la id del barco esta hundido
-				//if(color>=0)
-					//guiTablero.pintaBarcoHundido(partida.getBarco(color));
-				break;
+			}else{	
+				guiTablero.cambiaEstado("Game Over: " + "Juego acabado en: " + disparos + " intentos!");
+				for (int i = 0; i < NUMFILAS; i++) {
+					for (int j = 0; j < NUMCOLUMNAS; j++) {
+						//guiTablero.buttons[i][j].setEnabled(false);
+						 
+						guiTablero.buttons[i][j].removeActionListener(this);
+					}
+				}
 			}
-			btn.removeActionListener(this);
-			guiTablero.cambiaEstado("Intentos: "+ disparos + " Barcos restantes: "+ quedan);
+			
 			
 			
         } // end actionPerformed
-
+		
 	} // end class ButtonListener
 
 
