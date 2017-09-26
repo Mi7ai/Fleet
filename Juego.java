@@ -157,12 +157,9 @@ public class Juego {
 			//initialize buttons vector
 			for (int i = 0; i < nf; i++) {
 				for (int j = 0; j < nc; j++) {
-					buttons[i][j]=new JButton();
-					
+					buttons[i][j]=new JButton();					
 					buttons[i][j].putClientProperty("fila",i);
-					buttons[i][j].putClientProperty("columna",j);
-					//String f = buttons[i][j].getText();
-					 
+					buttons[i][j].putClientProperty("columna",j);					 
 				}
 			} 
 			//add buttons to table 
@@ -210,26 +207,20 @@ public class Juego {
             	for(int j=0; j<NUMCOLUMNAS ;j++) {
             		int color = partida.pruebaCasilla(i, j);//devuelve color casilla        			
         			
-        				if(color==-1){
-        					
+        				if(color==-1){       					
         						guiTablero.pintaBoton(buttons[i][j], Color.cyan);
 
         				}else {	
-        					 
-        						
-        					 
+
     						guiTablero.pintaBoton(buttons[i][j], Color.red);
 
-        				}
-            		
-
-            
-			
+        				} 
+         				guiTablero.buttons[i][j].setEnabled(false);        				 
             	}
             }
-
+            
            
-			guiTablero.cambiaEstado("LA SOLUCIÓN ES : ");
+			guiTablero.cambiaEstado("LA SOLUCION ES : ");
 			
 		} // end muestraSolucion
 
@@ -242,7 +233,6 @@ public class Juego {
 		public void pintaBarcoHundido(String cadenaBarco) {
             // POR IMPLEMENTAR
 		
-			//System.out.println(cadenaBarco + "cadena Barco");
 			String[] partes = cadenaBarco.split("#");
 			int fila = Integer.parseInt(partes[0]);
  			int col = Integer.parseInt(partes[1]);
@@ -336,17 +326,16 @@ public class Juego {
 				guiTablero.liberaRecursos();
 				break;
 			case "Nueva Partida":
-				guiTablero.limpiaTablero();
+ 				guiTablero.limpiaTablero();
 				partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);				 
 				disparos=0;
+				System.out.println("disparos"+disparos);
 				quedan = NUMBARCOS;
-				String est= "Intentos: "+ disparos + " Barcos restantes: "+ quedan;
-				guiTablero.cambiaEstado(est);
+				guiTablero.cambiaEstado("Intentos: "+ disparos + " Barcos restantes: "+ quedan);
 				for (int i = 0; i < NUMFILAS; i++) {
 					for (int j = 0; j < NUMCOLUMNAS; j++) {
-						if (!guiTablero.buttons[i][j].isSelected()) {
-							guiTablero.buttons[i][j].addActionListener(new ButtonListener());;
-						}						
+        				guiTablero.buttons[i][j].setEnabled(true);        				 
+						guiTablero.buttons[i][j].removeActionListener(new ButtonListener());
 					}
 				}
 				break;
@@ -381,21 +370,16 @@ public class Juego {
 			 
 			JButton btn = (JButton) e.getSource();//boton pulsado
 			
-			System.out.println("Fila "+btn.getClientProperty("fila")+ " Columna "+btn.getClientProperty("columna"));
-			System.out.println();
+			//System.out.println("Fila "+btn.getClientProperty("fila")+ " Columna "+btn.getClientProperty("columna"));
+			//System.out.println();
 			
 			int fila =(int) btn.getClientProperty("fila");
 			int col =(int) btn.getClientProperty("columna");
 			int color = partida.pruebaCasilla(fila, col);//devuelve color casilla
 			System.out.println(color);
-			disparos++;
-			
-			//int barco = mar[f][c];
-			//while(quedan != 0 ) {
-			if (quedan == 0) {
-				
-			} 
-			if(quedan!=0){
+
+			 
+			 
 			
 				switch (color) {
 					case -1:
@@ -419,19 +403,9 @@ public class Juego {
 					
 				}//end switch
 			
-				guiTablero.cambiaEstado("Intentos: "+ disparos + " Barcos restantes: "+ quedan);
-				btn.removeActionListener(this);
+				guiTablero.cambiaEstado("Intentos: "+ ++disparos + " Barcos restantes: "+ quedan);
 				 
-			}else{	
-				guiTablero.cambiaEstado("Game Over: " + "Juego acabado en: " + disparos + " intentos!");
-				for (int i = 0; i < NUMFILAS; i++) {
-					for (int j = 0; j < NUMCOLUMNAS; j++) {
-						//guiTablero.buttons[i][j].setEnabled(false);
-						 
-						guiTablero.buttons[i][j].removeActionListener(this);
-					}
-				}
-			}
+		 
 			
 			
 			
