@@ -109,11 +109,15 @@ public class Partida {
 	 * @return	vector de cadenas, una por barco con la informacion de getBarco
 	 */	
 	public String[] getSolucion() {
-        String[] listadoBarcos = new String[5];
-        for(int i = 0; i<barcos.size(); i++) {
-        			listadoBarcos[i]=getBarco(i);
-        		}
-		return listadoBarcos;
+		String[] listaBarcos =new String[numBarcos];
+		
+		int i=0;
+		for(Barco barco : barcos) {
+			
+			listaBarcos[i] = barco.toString();
+			i++;
+		}
+		return listaBarcos;
 	}
     
 

@@ -209,19 +209,16 @@ public class Juego {
         			
         				if(color==-1){       					
         						guiTablero.pintaBoton(buttons[i][j], Color.cyan);
-
-        				}else {	
-
-    						guiTablero.pintaBoton(buttons[i][j], Color.red);
-
-        				} 
-         				guiTablero.buttons[i][j].setEnabled(false);        				 
+        				}			
+    				 
             	}
             }
-            
-           
+ 
 			guiTablero.cambiaEstado("LA SOLUCION ES : ");
-			
+			for(String cadenaBarco : partida.getSolucion()) {
+				pintaBarcoHundido(cadenaBarco);
+			}
+			quedan=0;
 		} // end muestraSolucion
 
 
@@ -232,9 +229,10 @@ public class Juego {
 		 */
 		public void pintaBarcoHundido(String cadenaBarco) {
             // POR IMPLEMENTAR
-		
+			
 			String[] partes = cadenaBarco.split("#");
 			int fila = Integer.parseInt(partes[0]);
+			
  			int col = Integer.parseInt(partes[1]);
  			char ori = partes[2].charAt(0);
 			
@@ -329,8 +327,7 @@ public class Juego {
  				guiTablero.limpiaTablero();
 				partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);				 
 				disparos=0;
-				System.out.println("disparos"+disparos);
-				quedan = NUMBARCOS;
+ 				quedan = NUMBARCOS;
 				guiTablero.cambiaEstado("Intentos: "+ disparos + " Barcos restantes: "+ quedan);
 				for (int i = 0; i < NUMFILAS; i++) {
 					for (int j = 0; j < NUMCOLUMNAS; j++) {
@@ -367,48 +364,44 @@ public class Juego {
 		@Override
 		public void actionPerformed(ActionEvent e) {
             // POR IMPLEMENTAR
-			 
-			JButton btn = (JButton) e.getSource();//boton pulsado
-			
-			//System.out.println("Fila "+btn.getClientProperty("fila")+ " Columna "+btn.getClientProperty("columna"));
-			//System.out.println();
-			
-			int fila =(int) btn.getClientProperty("fila");
-			int col =(int) btn.getClientProperty("columna");
-			int color = partida.pruebaCasilla(fila, col);//devuelve color casilla
-			System.out.println(color);
-
-			 
-			 
-			
-				switch (color) {
-					case -1:
-						
-						guiTablero.pintaBoton(btn, Color.cyan);
-						break;
-						 
-					case -2:
-						 
-						guiTablero.pintaBoton(btn, Color.ORANGE);
-						break;
-						 
-								
-					default://si devuelve la id del barco esta hundido
-						if(color>=0) {
-							guiTablero.pintaBarcoHundido(partida.getBarco(color));
-							
-						}
-							
-						break;
-					
-				}//end switch
-			
-				guiTablero.cambiaEstado("Intentos: "+ ++disparos + " Barcos restantes: "+ quedan);
+			if (quedan > 0) {
+				
 				 
-		 
-			
-			
-			
+				JButton btn = (JButton) e.getSource();//boton pulsado
+				
+	 
+				
+				int fila =(int) btn.getClientProperty("fila");
+				int col =(int) btn.getClientProperty("columna");
+				int color = partida.pruebaCasilla(fila, col);//devuelve color casilla
+	  	
+					switch (color) {
+						case -1:
+							
+							guiTablero.pintaBoton(btn, Color.cyan);
+							break;
+							 
+						case -2:
+							 
+							guiTablero.pintaBoton(btn, Color.ORANGE);
+							break;
+							 
+									
+						default://si devuelve la id del barco esta hundido
+							if(color>=0) {
+								guiTablero.pintaBarcoHundido(partida.getBarco(color));
+								
+							}
+								
+							break;
+						
+					}//end switch
+				
+					guiTablero.cambiaEstado("Intentos: "+ ++disparos + " Barcos restantes: "+ quedan);
+			 
+			}else{
+				guiTablero.cambiaEstado("Game over! Acabado en: "+disparos+" intentos");
+			}
         } // end actionPerformed
 		
 	} // end class ButtonListener
